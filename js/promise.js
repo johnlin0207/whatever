@@ -1,4 +1,10 @@
-var _Promise = function (asyncFn) {
+/**
+ * 模拟实现一个Promise A+规范，尚未完成
+ * @param asyncFn
+ * @returns {{then: _Promise.then, catch: _Promise.catch, status: _Promise.status}}
+ * @private
+ */
+const _Promise = function (asyncFn) {
     let resolveCallbackFn = [];
     let rejectedCallbackFn = [];
     this.status = 'PENDING';
