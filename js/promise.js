@@ -1,7 +1,6 @@
 /**
  * 模拟实现一个Promise A规范
  * @param asyncFn
- * @returns {{then: _Promise.then, catch: _Promise.catch, status: _Promise.status}}
  * @private
  */
 const _Promise = function (asyncFn) {
@@ -12,9 +11,6 @@ const _Promise = function (asyncFn) {
     this.REJECTED = 'REJECTED';
     this.status = this.PENDING;
     this.data = null;
-    this.catch = function (fn) {
-        this.rejectedCallbackFn.push(fn)
-    };
 
     let resolve = (data) => {
         // debugger
