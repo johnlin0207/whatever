@@ -13,7 +13,6 @@ const _Promise = function (asyncFn) {
     this.data = null;
 
     let resolve = (data) => {
-        // debugger
         if (this.status === this.PENDING) {
             this.status = this.FULFILLED;
             this.data = data;
@@ -60,17 +59,19 @@ _Promise.prototype.then = function (onFulfilled, onRejected) {
             fn(this.data)
         })
     }
-    // return this
+    return this
 };
 
 const p = new _Promise(function (rs, rj) {
     setTimeout(function () {
         rs('done');
-    }, 100)
+    }, 1000)
 });
 
 p.then((data) => {
     console.log('data:' + data)
 }, (err) => {
     console.log('err:'+ err)
+}).then(() => {
+    console.log(123)
 });
