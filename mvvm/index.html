@@ -6,20 +6,19 @@
 </head>
 <body>
 
-<input type="text" j-modal='name'>
-<input type="text" j-modal="name">
+<input type="text" d-modal='name'>
+<input type="text" d-modal="name">
 
 <hr>
-1.<div j-text="name"></div>
-2.<div j-text="name"></div>
-
+1.<div d-text="name"></div>
+2.<div d-text="name"></div>
 
 <ul>
-    <li j-for="i in list" j-text="i"></li>
+    <li d-for="i in list" d-text="i"></li>
 </ul>
 
 <script src="../lib/jquery-3.5.1.min.js"></script>
-<script src="JL.js"></script>
+<script src="delta.js"></script>
 <script>
     App({
         data: {

@@ -1,30 +1,9 @@
 /**
- * JL.js致力于快速构建前端MVVM的良好体验
- _____                    _____
- /\    \                  /\    \
- /::\    \                /::\____\
- \:::\    \              /:::/    /
- \:::\    \            /:::/    /
- \:::\    \          /:::/    /
- \:::\    \        /:::/    /
- /::::\    \      /:::/    /
- _____   /::::::\    \    /:::/    /
- /\    \ /:::/\:::\    \  /:::/    /
- /::\    /:::/  \:::\____\/:::/____/
- \:::\  /:::/    \::/    /\:::\    \
- \:::\/:::/    / \/____/  \:::\    \
- \::::::/    /            \:::\    \
- \::::/    /              \:::\    \
- \::/    /                \:::\    \
- \/____/                  \:::\    \
- \:::\    \
- \:::\____\
- \::/    /
- \/____/
+ * Delta.js致力于快速构建前端MVVM的良好体验
  */
 
 //数据模型
-class JL {
+class Delta {
     constructor(obj) {
         const {data, onMounted, ...other} = obj;
         //内部维护的data
@@ -32,7 +11,7 @@ class JL {
         //dom数组
         this.domArr = [];
         this._innerData = {
-            construction: ['j-text', 'j-modal', 'j-for'],
+            construction: ['d-text', 'd-modal', 'd-for'],
             bindingVariable2domActionMapping: {} //{'name': [function(){}]}
         };
 
@@ -114,8 +93,8 @@ class JL {
     //处理指令
     handleConstruction(dom, cons) {
         switch (cons) {
-            case 'j-text':
-                let bindingTextVariableName = dom.outerHTML.match(/j-text=["'](\w+)["']/)[1];
+            case 'd-text':
+                let bindingTextVariableName = dom.outerHTML.match(/d-text=["'](\w+)["']/)[1];
                 if (!this[bindingTextVariableName]) {
                     throw TypeError(`${bindingTextVariableName} using without define, at ${dom}`)
                 } else {
@@ -128,8 +107,8 @@ class JL {
                     }
                 }
                 break;
-            case 'j-modal':
-                let bindingModalVariableName = dom.outerHTML.match(/j-modal=["'](\w+)["']/)[1];
+            case 'd-modal':
+                let bindingModalVariableName = dom.outerHTML.match(/d-modal=["'](\w+)["']/)[1];
                 if (!this[bindingModalVariableName]) {
                     throw TypeError(`${bindingModalVariableName} using without define,you need define it in data firstly,at ${dom}`)
                 } else {
@@ -147,8 +126,8 @@ class JL {
                     })
                 }
                 break;
-            case 'j-for':
-                let bindingForVariableName = dom.outerHTML.match(/j-for=["'](\w+\s\w+\s\w+)["']/)[1];
+            case 'd-for':
+                let bindingForVariableName = dom.outerHTML.match(/d-for=["'](\w+\s\w+\s\w+)["']/)[1];
                 let arrName = bindingForVariableName.match(/^\w+\s\w+\s(\w+)$/)[1];
                 let iName = bindingForVariableName.match(/^(\w+)\s\w+\s\w+$/)[1];
                 this.handleFor(dom, iName, arrName);
@@ -156,7 +135,7 @@ class JL {
         }
     }
 
-    //j-text
+    //d-text
     handleSettingText(dom, bindingTextVariableName) {
         const domTextAction = () => {
             $(dom).text(this[bindingTextVariableName])
@@ -164,7 +143,7 @@ class JL {
         this._innerData.bindingVariable2domActionMapping[bindingTextVariableName].push(domTextAction)
     }
 
-    //j-modal
+    //d-modal
     handleSettingValue(dom, bindingModalVariableName) {
         const domValAction = () => {
             //更新input的输入值,input完全受控
@@ -173,7 +152,7 @@ class JL {
         this._innerData.bindingVariable2domActionMapping[bindingModalVariableName].push(domValAction)
     }
 
-    //j-for
+    //d-for
     handleFor(dom, iName, arrName){
         console.log(dom, iName, arrName);
         const domForAction = () => {
@@ -200,16 +179,16 @@ class JL {
     }
 }
 
-JL.App = (function () {
+Delta.App = (function () {
     let instance;
     return function (obj) {
         if (!instance) {
-            instance = new JL(obj)
+            instance = new Delta(obj)
         }
         return instance
     }
 })();
 
-const App = JL.App;
+const App = Delta.App;
 
 
