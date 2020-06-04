@@ -72,6 +72,7 @@ class Delta {
         this.findAllBodyDom();
     }
 
+    //寻找body下所有的DOM
     findAllBodyDom() {
         const body = document.getElementsByTagName('body')[0];
         //取出body中的所有除script之外的dom元素
@@ -82,47 +83,55 @@ class Delta {
         }
     }
 
+    //对每个指令找寻对应的DOM并处理
     matchConstruction(dom) {
+        //循环每个指令
+        let attr = Object.values(dom.attributes);
+        //将这个dom的attributes提取成为一个key:value对象
+        let attributesObj = {};
+        for (let i of attr) {
+            attributesObj[i.name] = i.value
+        }
         this._innerData.construction.forEach((construction) => {
-            if (dom.outerHTML.match(construction) !== null) {
-                this.handleConstruction(dom, construction)
+            //符合指令的DOM元素进一步处理
+            if (attributesObj[construction] !== undefined) {
+                const bindingVariableName = attributesObj[construction];
+                this.handleConstruction(dom, construction, bindingVariableName)
             }
         })
     }
 
     //处理指令
-    handleConstruction(dom, cons) {
+    handleConstruction(dom, cons, bindingVariableName) {
         switch (cons) {
             case 'd-text':
-                let bindingTextVariableName = dom.outerHTML.match(/d-text=["'](\w+)["']/)[1];
-                if (!this[bindingTextVariableName]) {
-                    throw TypeError(`${bindingTextVariableName} using without define, at ${dom}`)
+                if (!this[bindingVariableName]) {
+                    throw TypeError(`${bindingVariableName} using without defined,you need define it in data firstly,at ${dom}`)
                 } else {
-                    let thisVariableActionFn = this._innerData.bindingVariable2domActionMapping[bindingTextVariableName];
+                    let thisVariableActionFn = this._innerData.bindingVariable2domActionMapping[bindingVariableName];
                     if (!thisVariableActionFn) {
-                        this._innerData.bindingVariable2domActionMapping[bindingTextVariableName] = [];
-                        this.handleSettingText(dom, bindingTextVariableName);
+                        this._innerData.bindingVariable2domActionMapping[bindingVariableName] = [];
+                        this.handleSettingText(dom, bindingVariableName);
                     } else {
-                        this.handleSettingText(dom, bindingTextVariableName);
+                        this.handleSettingText(dom, bindingVariableName);
                     }
                 }
                 break;
             case 'd-modal':
-                let bindingModalVariableName = dom.outerHTML.match(/d-modal=["'](\w+)["']/)[1];
-                if (!this[bindingModalVariableName]) {
-                    throw TypeError(`${bindingModalVariableName} using without define,you need define it in data firstly,at ${dom}`)
+                if (!this[bindingVariableName]) {
+                    throw TypeError(`${bindingVariableName} using without defined,you need define it in data firstly,at ${dom}`)
                 } else {
                     //初始化数据
-                    let thisVariableActionFn = this._innerData.bindingVariable2domActionMapping[bindingModalVariableName];
+                    let thisVariableActionFn = this._innerData.bindingVariable2domActionMapping[bindingVariableName];
                     if (!thisVariableActionFn) {
-                        this._innerData.bindingVariable2domActionMapping[bindingModalVariableName] = [];
-                        this.handleSettingValue(dom, bindingModalVariableName);
+                        this._innerData.bindingVariable2domActionMapping[bindingVariableName] = [];
+                        this.handleSettingValue(dom, bindingVariableName);
                     } else {
-                        this.handleSettingValue(dom, bindingModalVariableName);
+                        this.handleSettingValue(dom, bindingVariableName);
                     }
                     //绑定V->M
                     $(dom).on('input', (e) => {
-                        this.data[bindingModalVariableName] = e.target.value
+                        this.data[bindingVariableName] = e.target.value
                     })
                 }
                 break;
@@ -153,15 +162,13 @@ class Delta {
     }
 
     //d-for
-    handleFor(dom, iName, arrName){
+    handleFor(dom, iName, arrName) {
         console.log(dom, iName, arrName);
         const domForAction = () => {
             //暂时没有diff功能，重新渲染j-for的dom
 
-
         };
         this._innerData.bindingVariable2domActionMapping[arrName].push(domForAction)
-
     }
 
     //递归算法
@@ -189,6 +196,11 @@ Delta.App = (function () {
     }
 })();
 
-const App = Delta.App;
-
-
+try{
+    //CMD
+    if(module && module.export){
+        module.export = Delta.App
+    }
+} catch(e){
+    App = Delta.App;
+}
