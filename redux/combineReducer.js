@@ -8,6 +8,6 @@ export const combineReducers = (reducersObj) => {
         return Object.keys(reducersObj).reduce((accumulator, reducerName) => {
             accumulator[reducerName] = reducersObj[reducerName](state[reducerName], action);
             return accumulator
-        }, {});
+        }, state);
     }
 };
