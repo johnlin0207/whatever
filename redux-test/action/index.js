@@ -11,7 +11,7 @@ const ADD = () => {
 }
 
 const syncADD = () => {
-  return (dispatch) => {
+  return ({dispatch, getState}) => {
     setTimeout(() => {
       dispatch(ADD())
     }, 1000)

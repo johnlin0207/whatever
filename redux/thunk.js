@@ -1,9 +1,8 @@
-const thunk = (store) => (next) => (action) => {
+const thunk = ({dispatch, getState}) => (next) => (action) => {
     if (typeof action === 'function') {
-        action(next)
-    } else {
-        next(action)
+        return action({dispatch, getState})
     }
+    return next(action)
 };
 
 module.exports = thunk;
