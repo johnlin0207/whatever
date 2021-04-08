@@ -10,9 +10,9 @@ const compose = (...fns) => {
     }
 };
 
-export const applyMiddleware = (...middlewares) => {
-    return (createStore) => (reducer, preloadedState, enhancer) => {
-        let store = createStore(reducer, preloadedState, enhancer);
+const applyMiddleware = (...middlewares) => {
+    return (next) => (reducer, initialState) => {
+        let store = next(reducer, initialState);
         let dispatch = store.dispatch;
         let middlewareAPI = { //定义初始store对象
             getState: store.getState,
@@ -26,3 +26,5 @@ export const applyMiddleware = (...middlewares) => {
         }
     }
 };
+
+module.exports =  applyMiddleware;

@@ -3,7 +3,7 @@
  * @param reducersObj
  * @returns {function(*=, *=): {}}
  */
-export const combineReducers = (reducersObj) => {
+const combineReducers = (reducersObj) => {
     return (state = {}, action) => {
         return Object.keys(reducersObj).reduce((accumulator, reducerName) => {
             accumulator[reducerName] = reducersObj[reducerName](state[reducerName], action);
@@ -11,3 +11,4 @@ export const combineReducers = (reducersObj) => {
         }, state);
     }
 };
+module.exports =  combineReducers;
